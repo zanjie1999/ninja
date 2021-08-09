@@ -30,54 +30,27 @@ Ninja 仅支持 qinglong 2.8+
 
 1. 容器映射 5701 端口，ninja 目录至宿主机
 
-   例（docker-compose）：
+   由于原作者写了个特别沙雕的启动命令来坑人，这里写一条能用的
 
-   ```diff
-   version: "3"
-   services:
-     qinglong:
-       image: whyour/qinglong:latest
-       container_name: qinglong
-       restart: unless-stopped
-       tty: true
-       ports:
-         - 5700:5700
-   +      - 5701:5701
-       environment:
-         - ENABLE_HANGUP=true
-         - ENABLE_WEB_PANEL=true
-       volumes:
-         - ./config:/ql/config
-         - ./log:/ql/log
-         - ./db:/ql/db
-         - ./repo:/ql/repo
-         - ./raw:/ql/raw
-         - ./scripts:/ql/scripts
-         - ./jbot:/ql/jbot
-   +      - ./ninja:/ql/ninja
-   ```
-
-   例（docker-run）：
-
-   ```diff
+   ```bash
    docker run -dit \
-     -v $PWD/ql/config:/ql/config \
-     -v $PWD/ql/log:/ql/log \
-     -v $PWD/ql/db:/ql/db \
-     -v $PWD/ql/repo:/ql/repo \
-     -v $PWD/ql/raw:/ql/raw \
-     -v $PWD/ql/scripts:/ql/scripts \
-     -v $PWD/ql/jbot:/ql/jbot \
-   + -v $PWD/ql/ninja:/ql/ninja \
-     -p 5700:5700 \
-   + -p 5701:5701 \
-     --name qinglong \
-     --hostname qinglong \
-     --restart unless-stopped \
-     whyour/qinglong:latest
+   -v $PWD/ql/config:/ql/config \
+   -v $PWD/ql/log:/ql/log \
+   -v $PWD/ql/db:/ql/db \
+   -v $PWD/ql/repo:/ql/repo \
+   -v $PWD/ql/raw:/ql/raw \
+   -v $PWD/ql/scripts:/ql/scripts \
+   -v $PWD/ql/jbot:/ql/jbot \
+   -v $PWD/ql/ninja:/ql/ninja \
+   -p 5700:5700 \
+   -p 5701:5701 \
+   --name qinglong \
+   --hostname qinglong \
+   --restart unless-stopped \
+   whyour/qinglong:latest
    ```
 
-2. 进容器内执行以下命令
+2.  `docker exec -it qinglong bash`进容器内执行以下命令
 
    **进容器内执行以下命令**
 
@@ -89,7 +62,7 @@ Ninja 仅支持 qinglong 2.8+
    cp sendNotify.js /ql/scripts/sendNotify.js
    ```
 
-3. 将以下内容粘贴到 `extra.sh`（重启后自动更新并启动 Ninja）
+3. 在后台将以下内容粘贴到 `extra.sh`（重启后自动更新并启动 Ninja）
 
    ```bash
    cd /ql/ninja/backend
